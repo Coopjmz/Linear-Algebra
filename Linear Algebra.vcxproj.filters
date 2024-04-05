@@ -15,27 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Math.cpp">
+    <ClCompile Include="src\Math.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Vector3.h">
+    <ClInclude Include="src\Line3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Math.h">
+    <ClInclude Include="src\Math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Point3.h">
+    <ClInclude Include="src\Plane3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Line3.h">
+    <ClInclude Include="src\Point3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Plane3.h">
+    <ClInclude Include="src\Vector3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
