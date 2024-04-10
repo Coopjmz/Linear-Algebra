@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cassert>
-
 #include "Math.h"
 #include "Point3.h"
 
@@ -73,7 +71,7 @@ template <typename T>
 inline Vector3<T> Vector3<T>::Normalized() const
 {
 	const T magnitude = Magnitude();
-	assert(magnitude > EPSILON);
+	Assert(magnitude > EPSILON);
 
 	return { x / magnitude, y / magnitude, z / magnitude };
 }
@@ -94,7 +92,7 @@ template <typename T>
 inline T Vector3<T>::AngleBetween(const Vector3& other) const
 {
 	const T magnitudesMultiplied = Magnitude() * other.Magnitude();
-	assert(magnitudesMultiplied > EPSILON);
+	Assert(magnitudesMultiplied > EPSILON);
 
 	return acos(DotProduct(other) / magnitudesMultiplied);
 }
@@ -103,7 +101,7 @@ template <typename T>
 inline Vector3<T> Vector3<T>::ProjectOnto(const Vector3& other) const
 {
 	const T otherMagnitudeSquared = other.MagnitudeSquared();
-	assert(otherMagnitudeSquared > EPSILON);
+	Assert(otherMagnitudeSquared > EPSILON);
 
 	return other * (DotProduct(other) / otherMagnitudeSquared);
 }
@@ -117,7 +115,7 @@ inline Point3<T> Vector3<T>::ToPoint() const
 template <typename T>
 inline bool Vector3<T>::IsZeroVector() const
 {
-	return MagnitudeSquared() < EPSILON;
+	return IsZero(MagnitudeSquared());
 }
 
 template <typename T>
@@ -129,15 +127,15 @@ inline bool Vector3<T>::IsParallelTo(const Vector3& other) const
 template <typename T>
 inline bool Vector3<T>::IsOrthogonalTo(const Vector3& other) const
 {
-	return abs(DotProduct(other)) < EPSILON;
+	return IsZero(DotProduct(other));
 }
 
 template <typename T>
 inline bool Vector3<T>::operator==(const Vector3& other) const
 {
-	return abs(x - other.x) < EPSILON
-		&& abs(y - other.y) < EPSILON
-		&& abs(z - other.z) < EPSILON;
+	return IsZero(x - other.x)
+		&& IsZero(y - other.y)
+		&& IsZero(z - other.z);
 }
 
 template <typename T>

@@ -2,25 +2,34 @@
 
 #include <cmath>
 
-#ifdef _MSVC_LANG
-	#if _MSVC_LANG >= 202002L
-		#include <numbers>
-		inline constexpr float PI = std::numbers::pi_v<float>;
-	#else
-		#include <corecrt_math_defines.h>
-		static constexpr float PI = M_PI;
-	#endif
+#include "Version.h"
+
+#if CPP_VERSION >= 202002L
+	#include <numbers>
+	CONST double PI = std::numbers::pi;
 #else
-	#if __cplusplus >= 202002L
-		#include <numbers>
-		inline constexpr float PI = std::numbers::pi_v<float>;
-	#else
-		#include <corecrt_math_defines.h>
-		static constexpr float PI = M_PI;
-	#endif
+	#include <corecrt_math_defines.h>
+	CONST double PI = M_PI;
 #endif
 
-inline constexpr float EPSILON = 1e-5f;
+CONST double EPSILON = 1e-5;
 
-float RadToDeg(const float rad);
-float DegToRad(const float deg);
+template <typename T>
+inline bool IsZero(const T value)
+{
+	return abs(value) < EPSILON;
+}
+
+template <typename T>
+inline T RadToDeg(const T rad)
+{
+	static constexpr T k = static_cast<T>(180 / PI);
+	return k * rad;
+}
+
+template <typename T>
+inline T DegToRad(const T deg)
+{
+	static constexpr T k = static_cast<T>(PI / 180);
+	return k * deg;
+}

@@ -35,9 +35,9 @@ inline Vector3<T> Point3<T>::ToVector() const
 template <typename T>
 inline bool Point3<T>::operator==(const Point3& other) const
 {
-	return abs(x - other.x) < EPSILON
-		&& abs(y - other.y) < EPSILON
-		&& abs(z - other.z) < EPSILON;
+	return IsZero(x - other.x)
+		&& IsZero(y - other.y)
+		&& IsZero(z - other.z);
 }
 
 template <typename T>

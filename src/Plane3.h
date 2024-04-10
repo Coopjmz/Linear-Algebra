@@ -1,8 +1,8 @@
 #pragma once
 
-#include <cassert>
 #include <optional>
 
+#include "Assert.h"
 #include "Math.h"
 #include "Point3.h"
 #include "Vector3.h"
@@ -54,7 +54,7 @@ inline Plane3<T>::Plane3(const Point3<T>& point, const Vector3<T>& normal)
 	: point(point)
 	, normal(normal)
 {
-	assert(!normal.IsZeroVector());
+	Assert(!normal.IsZeroVector());
 }
 
 template<typename T>
@@ -62,7 +62,7 @@ inline Plane3<T>::Plane3(const Point3<T>& point, const Vector3<T>& vector1, cons
 	: point(point)
 	, normal(vector1.CrossProduct(vector2))
 {
-	assert(!normal.IsZeroVector());
+	Assert(!normal.IsZeroVector());
 }
 
 template <typename T>
@@ -70,7 +70,7 @@ inline Plane3<T>::Plane3(const Point3<T>& point1, const Point3<T>& point2, const
 	: point(point1)
 	, normal((point2 - point1).CrossProduct(point3 - point1))
 {
-	assert(!normal.IsZeroVector());
+	Assert(!normal.IsZeroVector());
 }
 
 template <typename T>
@@ -84,21 +84,21 @@ inline Plane3<T>::Plane3(const Line3<T>& line1, const Line3<T>& line2)
 	else if (line1.IsIntersectingWith(line2))
 		normal = crossProduct;
 	else
-		assert(!"Skewed lines cannot form a plane!");
+		Assert(!"Skewed lines cannot form a plane!");
 }
 
 template <typename T>
 inline Plane3<T>::Plane3(const T a, const T b, const T c, const T d)
 	: normal({ a, b, c })
 {
-	if (abs(a) > EPSILON)
+	if (!IsZero(a))
 		point.x = -d / a;
-	else if (abs(b) > EPSILON)
+	else if (!IsZero(b))
 		point.y = -d / b;
-	else if (abs(c) > EPSILON)
+	else if (!IsZero(c))
 		point.z = -d / c;
 	else
-		assert(!"Normal vector is the zero vector!");
+		Assert(!"Normal vector is the zero vector!");
 }
 
 template <typename T>
@@ -123,17 +123,17 @@ inline std::optional<Line3<T>> Plane3<T>::LineOfIntersection(const Plane3& other
 	const T otherDotProduct = other.normal.DotProduct(other.point.ToVector());
 	Point3<T> point;
 
-	if (abs(crossProduct.x) > EPSILON)
+	if (!IsZero(crossProduct.x))
 	{
 		point.y = (other.normal.z * thisDotProduct - normal.z * otherDotProduct) / crossProduct.x;
 		point.z = (other.normal.y * thisDotProduct - normal.y * otherDotProduct) / -crossProduct.x;
 	}
-	else if (abs(crossProduct.y) > EPSILON)
+	else if (!IsZero(crossProduct.y))
 	{
 		point.x = (other.normal.z * thisDotProduct - normal.z * otherDotProduct) / -crossProduct.y;
 		point.z = (other.normal.x * thisDotProduct - normal.x * otherDotProduct) / crossProduct.y;
 	}
-	else if (abs(crossProduct.z) > EPSILON)
+	else if (!IsZero(crossProduct.z))
 	{
 		point.x = (other.normal.y * thisDotProduct - normal.y * otherDotProduct) / crossProduct.z;
 		point.y = (other.normal.x * thisDotProduct - normal.x * otherDotProduct) / -crossProduct.z;
@@ -148,7 +148,7 @@ inline T Plane3<T>::AngleBetween(const Line3<T>& line) const
 	if (IsParallelTo(line)) return 0;
 
 	const T magnitudesMultiplied = normal.Magnitude() * line.direction.Magnitude();
-	assert(magnitudesMultiplied > EPSILON);
+	Assert(magnitudesMultiplied > EPSILON);
 
 	return asin(abs(normal.DotProduct(line.direction)) / magnitudesMultiplied);
 }
@@ -159,7 +159,7 @@ inline T Plane3<T>::AngleBetween(const Plane3& other) const
 	if (IsParallelTo(other)) return 0;
 
 	const T magnitudesMultiplied = normal.Magnitude() * other.normal.Magnitude();
-	assert(magnitudesMultiplied > EPSILON);
+	Assert(magnitudesMultiplied > EPSILON);
 
 	return acos(abs(normal.DotProduct(other.normal)) / magnitudesMultiplied);
 }
@@ -174,7 +174,7 @@ template <typename T>
 inline T Plane3<T>::DistanceTo(const Point3<T>& point) const
 {
 	const T normalMagnitude = normal.Magnitude();
-	assert(normalMagnitude > EPSILON);
+	Assert(normalMagnitude > EPSILON);
 
 	return abs(RelativeDistanceTo(point)) / normalMagnitude;
 }
@@ -194,7 +194,7 @@ inline T Plane3<T>::DistanceTo(const Plane3& other) const
 template <typename T>
 inline bool Plane3<T>::IsPointInPlane(const Point3<T>& point) const
 {
-	return abs(RelativeDistanceTo(point)) < EPSILON;
+	return IsZero(RelativeDistanceTo(point));
 }
 
 template <typename T>

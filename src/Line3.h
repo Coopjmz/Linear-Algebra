@@ -1,8 +1,8 @@
 #pragma once
 
-#include <cassert>
 #include <optional>
 
+#include "Assert.h"
 #include "Math.h"
 #include "Point3.h"
 #include "Vector3.h"
@@ -46,7 +46,7 @@ inline Line3<T>::Line3(const Point3<T>& point, const Vector3<T>& direction)
 	: point(point)
 	, direction(direction)
 {
-	assert(!direction.IsZeroVector());
+	Assert(!direction.IsZeroVector());
 }
 
 template <typename T>
@@ -54,7 +54,7 @@ inline Line3<T>::Line3(const Point3<T>& point1, const Point3<T>& point2)
 	: point(point1)
 	, direction(point2 - point1)
 {
-	assert(!direction.IsZeroVector());
+	Assert(!direction.IsZeroVector());
 }
 
 template <typename T>
@@ -72,7 +72,7 @@ inline T Line3<T>::AngleBetween(const Line3& other) const
 	if (!IsIntersectingWith(other)) return 0;
 
 	const T magnitudesMultiplied = direction.Magnitude() * other.direction.Magnitude();
-	assert(magnitudesMultiplied > EPSILON);
+	Assert(magnitudesMultiplied > EPSILON);
 
 	return acos(abs(direction.DotProduct(other.direction)) / magnitudesMultiplied);
 }
@@ -81,7 +81,7 @@ template <typename T>
 inline T Line3<T>::DistanceTo(const Point3<T>& point) const
 {
 	const T directionMagnitude = direction.Magnitude();
-	assert(directionMagnitude > EPSILON);
+	Assert(directionMagnitude > EPSILON);
 
 	return direction.CrossProduct(point - this->point).Magnitude() / directionMagnitude;
 }
@@ -145,17 +145,17 @@ inline std::pair<Point3<T>, Point3<T>> Line3<T>::GetClosestPointsWith(const Line
 	const Vector3<T> vector = other.point - point;
 	T t1, t2;
 
-	if (abs(crossProduct.x) > EPSILON)
+	if (!IsZero(crossProduct.x))
 	{
 		t1 = (other.direction.z * vector.y - other.direction.y * vector.z) / crossProduct.x;
 		t2 = (this->direction.z * vector.y - this->direction.y * vector.z) / crossProduct.x;
 	}
-	else if (abs(crossProduct.y) > EPSILON)
+	else if (!IsZero(crossProduct.y))
 	{
 		t1 = (other.direction.z * vector.x - other.direction.x * vector.z) / -crossProduct.y;
 		t2 = (this->direction.z * vector.x - this->direction.x * vector.z) / -crossProduct.y;
 	}
-	else if (abs(crossProduct.z) > EPSILON)
+	else if (!IsZero(crossProduct.z))
 	{
 		t1 = (other.direction.y * vector.x - other.direction.x * vector.y) / crossProduct.z;
 		t2 = (this->direction.y * vector.x - this->direction.x * vector.y) / crossProduct.z;
@@ -163,7 +163,7 @@ inline std::pair<Point3<T>, Point3<T>> Line3<T>::GetClosestPointsWith(const Line
 	else
 	{
 		const T otherDirectionMagnitudeSquared = other.direction.MagnitudeSquared();
-		assert(otherDirectionMagnitudeSquared > EPSILON);
+		Assert(otherDirectionMagnitudeSquared > EPSILON);
 
 		t1 = 0;
 		t2 = -vector.DotProduct(other.direction) / otherDirectionMagnitudeSquared;

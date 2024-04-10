@@ -140,14 +140,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Math.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Assert.h" />
     <ClInclude Include="src\Line3.h" />
     <ClInclude Include="src\Math.h" />
     <ClInclude Include="src\Plane3.h" />
     <ClInclude Include="src\Point3.h" />
     <ClInclude Include="src\Vector3.h" />
+    <ClInclude Include="src\Version.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
